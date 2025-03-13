@@ -7,7 +7,20 @@ class EstudiantesController{
     }
 
     consultar(req,res){
-        res.json({msg: 'Actualizacion de estudiantesxd'});
+        try{
+            db.query(`SELECT * FROM estudiantes`,
+
+                (err, rows) => {
+                    if(err){
+                        res.status(400).send(err);
+                    }
+                    res.status(200).json(rows);
+                }
+            )
+        }catch(err){
+        console.log(err);
+        res.status(500).send(err.message);
+       }
     }
 
     consultarDetalle(req,res){  
@@ -16,7 +29,22 @@ class EstudiantesController{
     }
     
     ingresar(req,res){
-        res.json({msg: 'Ingrear de estudiantexd'});
+       try{
+        const {dni, nombre, apellido, email} = req.body;
+            db.query(`INSERT INTO estudiantes
+            (id, dni, nombre, apellido, email)
+            VALUES(NULL, ?,?,?,?)`,
+        [dni, nombre, apellido,email],(err, rows) => {
+            if(err){
+                res.status(400).send(err);
+            }
+            res.status(201).json({id: rows.insertId})
+        }
+        )
+       }catch(err){
+        console.log(err);
+        res.status(500).send(err.message);
+       }
     }
     actualizar(req,res){
         res.json({msg: 'Actualizacion de estudiantesxd'});
