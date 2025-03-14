@@ -1,3 +1,4 @@
+const { response } = require('express');
 const db = require('../database/conexion.js')
 
 class EstudiantesController{
@@ -25,7 +26,20 @@ class EstudiantesController{
 
     consultarDetalle(req,res){  
         const { id } = req.params   
-     res.json({msg: `Consulta de un estudiantes con id ${id}`});
+        try{
+            db.query(`SELECT * FROM estudiantes WHERE id =? `,
+                [id],
+                (err, rows) => {
+                    if(err){
+                        res.status(400).send(err);
+                    }
+                    res.status(200).json(rows[0]);
+                }
+            )
+        }catch(err){
+        console.log(err);
+        res.status(500).send(err.message);
+       }
     }
     
     ingresar(req,res){
@@ -47,10 +61,42 @@ class EstudiantesController{
        }
     }
     actualizar(req,res){
-        res.json({msg: 'Actualizacion de estudiantesxd'});
+        const { id } = req.params           
+        try{
+            const {dni, nombre, apellido, email} = req.body;
+            db.query(`UPDATE cursos.estudiantes 
+                SET dni = ?, nombre = ?, apellido = ?, email =? 
+                WHERE id = ?;`,
+                [dni, nombre, apellido, email,id],
+                (err, rows) => {
+                    if(err){
+                        res.status(400).send(err);
+                    }
+                    if(rows.affectedRows == 1)
+                    res.status(200).json({respuesta : 'Actualizado con exito'});
+                }
+            )
+        }catch(err){
+        res.status(500).send(err.message);
+       }
     }
     borrar(req,res){
-        res.json({msg: 'Borrado de estudiantesxd'});
+        const { id } = req.params           
+        try{
+            const {dni, nombre, apellido, email} = req.body;
+            db.query(`DELETE FROM estudiantes WHERE id = ?;`,
+                [id],
+                (err, rows) => {
+                    if(err){
+                        res.status(400).send(err);
+                    }
+                    if(rows.affectedRows == 1)
+                    res.status(200).json({respuesta : 'Eliminado con exito'});
+                }
+            )
+        }catch(err){
+        res.status(500).send(err.message);
+       }
     }
 
 }
