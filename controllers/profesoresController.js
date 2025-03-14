@@ -47,7 +47,10 @@ class ProfesorController{
             if(err){
                 res.status(400).send(err);
             }
+           else{
             res.status(201).json({id: rows.insertId})
+           }
+          
         }
     )
       }catch(err){

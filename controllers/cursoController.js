@@ -45,9 +45,11 @@ class CursoController{
             VALUES(NULL, ?,?,?)`,
             [nombre, descripcion, profesor_id], (err, rows) => {
                 if(err){
-                    res.status(400).send(err);
-                }
-                res.status(201).json({id: rows.insertId})
+                    res.status(400).send(err,message);
+                }  else{
+                    res.status(201).json({id: rows.insertId})
+                }           
+                
             }
         )
           }catch(err){
@@ -91,6 +93,25 @@ class CursoController{
         }catch(err){
             res.status(500).send(err.message);
         }
+    }
+    asociarEstudiante(req,res){
+        try{
+            const { curso_id, estudiante_id } = req.body;
+            db.query(`INSERT INTO cursos_estudiantes
+            ( curso_id, estudiante_id)
+            VALUES(?,?)`,
+            [curso_id, estudiante_id], (err, rows) => {
+                if(err){
+                    res.status(400).send(err.message);
+                }  else{
+                    res.status(201).json({message: "Se registro el estudiante"})
+                }           
+                
+            }
+        )
+          }catch(err){
+            res.status(500).send(err.message);
+          }
     }
 
 }

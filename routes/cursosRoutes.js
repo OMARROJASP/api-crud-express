@@ -4,6 +4,7 @@ const cursoController = require('../controllers/cursoController.js');
 
 routerCurso.get('/', cursoController.consultar);
 routerCurso.post('/', cursoController.ingresar);
+routerCurso.post('/estudianteCurso', cursoController.asociarEstudiante);
 
 routerCurso.route('/:id')
 .get(cursoController.consultarDetalle)
